@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "174728030084",
+    "project_id": "twitteclone-7f8f5",
+    "storage_bucket": "twitteclone-7f8f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174728030084:android:631da72ae962bafd9c9fd1",
+        "android_client_info": {
+          "package_name": "com.emirfikri.twitterclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174728030084-7iik605h18sd2v0ckherbonm5t5p7ke9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emirfikri.twitterclone",
+            "certificate_hash": "4f9297ee42acb3e8a4b873ba31b50651a8b10ffa"
+          }
+        },
+        {
+          "client_id": "174728030084-kul3v01jnrg0ulmbcc8hgr53mg879ti5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Zv5TXewdKnqI5HEfYPq7nqQnyhD-Qlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174728030084-kul3v01jnrg0ulmbcc8hgr53mg879ti5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
