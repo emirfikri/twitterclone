@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:twitterclone/Pages/Auth/Repo/auth_repo.dart';
+import '../../theme/colors.dart';
 import '../Auth/Signin/sign_in.dart';
 import '../Auth/bloc/bloc_export.dart';
+import '../Profile/profile.dart';
+import 'Pages/home_page.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -18,30 +20,32 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  int currentIndex = 0;
+  final List<Widget> _children = [
+    const InitialDisplay(),
+    Container(color: Colors.green),
+    const ProfileView(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final AuthBloc authBloc = AuthBloc(
       authRepository: RepositoryProvider.of<AuthRepository>(context),
     );
-
-    // Getting the user from the FirebaseAuth Instance
-
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(
-          create: (BuildContext context) => authBloc,
+    return BlocProvider(
+      create: (BuildContext context) => authBloc,
+      child: buildBody(
+        scaffold: Scaffold(
+          body: _children[currentIndex],
+          bottomNavigationBar: BottomAppBar(
+            child: bottomNavBar(0),
+          ),
         ),
-      ],
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Dashboard'),
-        ),
-        body: buildBody(),
       ),
     );
   }
 
-  buildBody() {
+  buildBody({required Scaffold scaffold}) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is UnAuthenticated) {
@@ -52,36 +56,108 @@ class _DashboardState extends State<Dashboard> {
           );
         }
       },
-      child: InitialDisplay(),
+      child: scaffold,
     );
   }
-}
 
-class InitialDisplay extends StatelessWidget {
-  const InitialDisplay({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Email: \n ${user.email}',
-            style: const TextStyle(fontSize: 24),
-            textAlign: TextAlign.center,
-          ),
-          user.displayName != null ? Text("${user.displayName}") : Container(),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            child: const Text('Sign Out'),
-            onPressed: () {
-              // Signing out the user
-              context.read<AuthBloc>().add(SignOutRequested());
-            },
-          ),
-        ],
+  Widget bottomNavBar(index) {
+    return BottomAppBar(
+      // ignore: sized_box_for_whitespace
+      child: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            MaterialButton(
+              // minWidth: Constants.width / 9,
+              onPressed: () {
+                setState(() {
+                  currentIndex = 0;
+                });
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.home,
+                    color: currentIndex == 0
+                        ? AppColor.firsttheme
+                        : AppColor.secondtheme,
+                    // size: Constants.width * 0.05,
+                  ),
+                  Text(
+                    'Home',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: currentIndex == 0
+                          ? AppColor.firsttheme
+                          : AppColor.secondtheme,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            MaterialButton(
+              // minWidth: Constants.width / 9,
+              onPressed: () {
+                setState(() {
+                  currentIndex = 1;
+                });
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.list,
+                    color: currentIndex == 1
+                        ? AppColor.firsttheme
+                        : AppColor.secondtheme,
+                    // size: Constants.width * 0.05,
+                  ),
+                  Text(
+                    'My Tweet',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: currentIndex == 1
+                          ? AppColor.firsttheme
+                          : AppColor.secondtheme,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            MaterialButton(
+              // minWidth: Constants.width / 9,
+              onPressed: () {
+                setState(() {
+                  // if user taps on this dashboard tab will be active
+                  currentIndex = 2;
+                });
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.supervised_user_circle,
+                    color: currentIndex == 2
+                        ? AppColor.firsttheme
+                        : AppColor.secondtheme,
+                    // size: Constants.width * 0.05,
+                  ),
+                  Text(
+                    'Account',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: currentIndex == 2
+                          ? AppColor.firsttheme
+                          : AppColor.secondary,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
