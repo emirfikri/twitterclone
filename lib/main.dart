@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
           authRepository: RepositoryProvider.of<AuthRepository>(context),
         ),
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: StreamBuilder<User?>(
               stream: authRepository.authStateChange(),
               builder: (context, snapshot) {

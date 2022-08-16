@@ -9,6 +9,12 @@ import '../Auth/Signin/sign_in.dart';
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
 
+  static Route<void> route() {
+    return MaterialPageRoute(
+      builder: (context) => const ProfileView(),
+    );
+  }
+
   @override
   State<ProfileView> createState() => _ProfileViewState();
 }
@@ -18,43 +24,55 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthBloc authBloc = AuthBloc(
-      authRepository: RepositoryProvider.of<AuthRepository>(context),
-    );
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(
-          create: (BuildContext context) => authBloc,
-        ),
-      ],
-      child: Scaffold(
-        appBar: _appBar(),
-        body: SingleChildScrollView(child: buildBody()),
+    return Scaffold(
+      appBar: appBar(),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is UnAuthenticated) {
+            // Navigate to the sign in screen when the user Signs Out
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => SignIn()),
+              (route) => false,
+            );
+          }
+        },
+        child: _profilePage(),
+        // child: Center(
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Text(
+        //         'Email: \n ${user.email}',
+        //         style: const TextStyle(fontSize: 24),
+        //         textAlign: TextAlign.center,
+        //       ),
+        //       user.photoURL != null
+        //           ? Image.network("${user.photoURL}")
+        //           : Container(),
+        //       user.displayName != null
+        //           ? Text("${user.displayName}")
+        //           : Container(),
+        //       const SizedBox(height: 16),
+        //       ElevatedButton(
+        //         child: const Text('Sign Out'),
+        //         onPressed: () {
+        //           // Signing out the user
+        //           context.read<AuthBloc>().add(SignOutRequested());
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }
 
-  buildBody() {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is UnAuthenticated) {
-          // Navigate to the sign in screen when the user Signs Out
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const SignIn()),
-            (route) => false,
-          );
-        }
-      },
-      child: _profilePage(),
-    );
-  }
-
-  PreferredSize _appBar() {
+  PreferredSize appBar() {
     final appBarHeight = AppBar().preferredSize.height;
     return PreferredSize(
         preferredSize: Size.fromHeight(appBarHeight),
         child: AppBar(
-          title: Text('Profile'),
+          title: const Text('Profile'),
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
@@ -67,19 +85,21 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _profilePage() {
-    return SafeArea(
-      child: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 30),
-            _avatar(),
-            _changeAvatarButton(),
-            SizedBox(height: 30),
-            _usernameTile(),
-            _emailTile(),
-            _descriptionTile(),
-            _saveProfileChangesButton(),
-          ],
+    return SingleChildScrollView(
+      child: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              _avatar(),
+              _changeAvatarButton(),
+              const SizedBox(height: 30),
+              _usernameTile(),
+              _emailTile(),
+              _descriptionTile(),
+              _saveProfileChangesButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -95,14 +115,14 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _changeAvatarButton() {
     return TextButton(
       onPressed: () {},
-      child: Text('Change Avatar'),
+      child: const Text('Change Avatar'),
     );
   }
 
   Widget _usernameTile() {
     return ListTile(
       tileColor: Colors.white,
-      leading: Icon(Icons.person),
+      leading: const Icon(Icons.person),
       title: Text(user.displayName ?? ""),
     );
   }
@@ -110,7 +130,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _emailTile() {
     return ListTile(
       tileColor: Colors.white,
-      leading: Icon(Icons.mail),
+      leading: const Icon(Icons.mail),
       title: Text(user.email ?? ""),
     );
   }
@@ -118,22 +138,14 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _descriptionTile() {
     return ListTile(
       tileColor: Colors.white,
-      leading: Icon(Icons.edit),
+      leading: const Icon(Icons.edit),
       title: TextFormField(
         // initialValue: state.userDescription,
         decoration: const InputDecoration.collapsed(
             hintText: 'Say something about yourself'),
         maxLines: null,
         // readOnly: !state.isCurrentUser,
-        toolbarOptions: ToolbarOptions(
-            // copy: state.isCurrentUser,
-            // cut: state.isCurrentUser,
-            // paste: state.isCurrentUser,
-            // selectAll: state.isCurrentUser,
-            ),
-        // onChanged: (value) => context
-        //     .read<ProfileBloc>()
-        //     .add(ProfileDescriptionChanged(description: value)),
+        toolbarOptions: const ToolbarOptions(),
       ),
     );
   }
@@ -141,7 +153,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget _saveProfileChangesButton() {
     return ElevatedButton(
       onPressed: () {},
-      child: Text('Save Changes'),
+      child: const Text('Save Changes'),
     );
   }
 }
