@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:twitterclone/Models/userModel.dart';
 
 class AuthProvider {
   final _auth = FirebaseAuth.instance;

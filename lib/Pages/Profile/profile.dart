@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twitterclone/Pages/Auth/bloc/auth_bloc.dart';
 
-import '../Auth/Repo/auth_repo.dart';
 import '../Auth/Signin/sign_in.dart';
 
 class ProfileView extends StatefulWidget {
@@ -31,38 +30,12 @@ class _ProfileViewState extends State<ProfileView> {
           if (state is UnAuthenticated) {
             // Navigate to the sign in screen when the user Signs Out
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => SignIn()),
+              MaterialPageRoute(builder: (context) => const SignIn()),
               (route) => false,
             );
           }
         },
         child: _profilePage(),
-        // child: Center(
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Text(
-        //         'Email: \n ${user.email}',
-        //         style: const TextStyle(fontSize: 24),
-        //         textAlign: TextAlign.center,
-        //       ),
-        //       user.photoURL != null
-        //           ? Image.network("${user.photoURL}")
-        //           : Container(),
-        //       user.displayName != null
-        //           ? Text("${user.displayName}")
-        //           : Container(),
-        //       const SizedBox(height: 16),
-        //       ElevatedButton(
-        //         child: const Text('Sign Out'),
-        //         onPressed: () {
-        //           // Signing out the user
-        //           context.read<AuthBloc>().add(SignOutRequested());
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ),
     );
   }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:twitterclone/Pages/Auth/Repo/auth_repo.dart';
 import 'package:twitterclone/Pages/Dashboard/cubit/dashboard_cubit.dart';
-import '../../theme/colors.dart';
-import '../Auth/Signin/sign_in.dart';
+import 'package:twitterclone/Pages/Post/view/addedit.dart';
 import '../Auth/bloc/bloc_export.dart';
+import '../Post/list_all_post.dart';
 import '../Profile/profile.dart';
 
 class Dashboard extends StatefulWidget {
@@ -41,9 +40,7 @@ class DashboardView extends StatelessWidget {
       body: IndexedStack(
         index: selectedTab.index,
         children: [
-          Container(
-            color: Colors.amberAccent,
-          ),
+          ListPosts(),
           const ProfileView(),
           Container(
             color: Colors.redAccent,
@@ -52,9 +49,8 @@ class DashboardView extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.read<DashboardCubit>().setTab(DashboardTab.profile),
-        child: const Icon(Icons.person),
+        onPressed: () => Navigator.of(context).push(AddEditPost.route()),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
@@ -68,8 +64,8 @@ class DashboardView extends StatelessWidget {
             ),
             _HomeTabButton(
               groupValue: selectedTab,
-              value: DashboardTab.third,
-              icon: const Icon(Icons.show_chart_rounded),
+              value: DashboardTab.profile,
+              icon: const Icon(Icons.person),
             ),
           ],
         ),

@@ -1,24 +1,52 @@
 // ignore_for_file: file_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
-  final String username;
-  final String email;
-  final String uid;
-  UserModel({required this.uid, required this.username, required this.email});
+  String? uid;
+  bool? isVerified;
+  final String? email;
+  String? password;
+  final String? displayName;
+  final String? photoURL;
+  UserModel({
+    this.photoURL,
+    this.uid,
+    this.email,
+    this.password,
+    this.displayName,
+    this.isVerified,
+  });
 
-  UserModel.fromJson(Map<String, dynamic> json)
-      : uid = json['uid'] ?? '',
-        email = json['email'] ?? '',
-        username = json['username'] ?? '';
+  Map<String, dynamic> toMap() {
+    return {
+      'email': email,
+      'displayName': displayName,
+      'uid': uid,
+      'photoURL': photoURL,
+    };
+  }
 
-  dynamic toJson() => {
-        'uid': uid,
-        'username': username,
-        'email': email,
-      };
+  UserModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
+      : uid = doc.id,
+        email = doc.data()!["email"],
+        photoURL = doc.data()!["photoURL"],
+        displayName = doc.data()!["displayName"];
 
-  @override
-  String toString() {
-    return toJson().toString();
+  UserModel copyWith({
+    bool? isVerified,
+    String? uid,
+    String? email,
+    String? password,
+    String? displayName,
+    String? photoURL,
+  }) {
+    return UserModel(
+        uid: uid ?? this.uid,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        displayName: displayName ?? this.displayName,
+        photoURL: photoURL ?? this.photoURL,
+        isVerified: isVerified ?? this.isVerified);
   }
 }

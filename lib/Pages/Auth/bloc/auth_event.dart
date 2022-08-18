@@ -17,12 +17,12 @@ class SignInRequested extends AuthEvent {
 
 // When the user signing up with email and password this event is called and the [AuthRepository] is called to sign up the user
 class SignUpRequested extends AuthEvent {
-  final String username;
+  final String displayName;
   final String email;
   final String password;
 
   const SignUpRequested(
-    this.username,
+    this.displayName,
     this.email,
     this.password,
   );
