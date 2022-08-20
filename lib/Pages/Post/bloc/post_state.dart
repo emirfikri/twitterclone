@@ -11,6 +11,11 @@ class PostInitial extends PostState {}
 
 class Loading extends PostState {}
 
+class GetPostLoaded extends PostState {
+  final Stream allpost;
+  const GetPostLoaded({required this.allpost});
+}
+
 class PostAdd extends PostState {}
 
 class PostEdit extends PostState {}

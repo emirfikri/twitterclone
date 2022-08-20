@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostModel {
@@ -22,4 +24,35 @@ class PostModel {
       required this.originalId,
       required this.retweet,
       required this.ref});
+
+  factory PostModel.fromDocument(DocumentSnapshot doc) {
+    DocumentReference ref = doc.reference;
+    Map<dynamic, dynamic> data = doc.data()! as Map;
+
+    return PostModel.fromJson(data, ref);
+  }
+
+  factory PostModel.fromJson(
+      Map<dynamic, dynamic> json, DocumentReference ref) {
+    final id = json['id'] ?? '';
+    final creator = json['creator'] ?? '';
+    final text = json['text'] ?? '';
+    final timestamp = json['timestamp'];
+    final likesCount = json['likesCount'] ?? '';
+    final retweetsCount = json['retweetsCount'] ?? '';
+    final originalId = json['originalId'] ?? '';
+    final retweet = json['retweet'] ?? '';
+
+    return PostModel(
+      id: id,
+      creator: creator,
+      text: text,
+      timestamp: timestamp,
+      likesCount: likesCount,
+      retweetsCount: retweetsCount,
+      originalId: originalId,
+      retweet: retweet,
+      ref: ref,
+    );
+  }
 }

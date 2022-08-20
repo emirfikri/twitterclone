@@ -8,13 +8,23 @@ part 'post_state.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc({
-    required PostModel? initialData,
+    PostModel? initialData,
   }) : super(PostInitial()) {
     on<PostEvent>((event, emit) {
       // TODO: implement event handler
     });
 
     PostRepo _postRepo = PostRepo();
+
+    on<GetAllPost>((event, emit) {
+      emit(Loading());
+      try {
+        Stream data = _postRepo.getFeed();
+        emit(GetPostLoaded(allpost: data));
+      } catch (e) {
+        emit(PostError(error: e.toString()));
+      }
+    });
 
     on<AddPost>((event, emit) async {
       emit(Loading());
@@ -28,7 +38,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<EditPost>((event, emit) async {
       emit(Loading());
       try {
-        await _postRepo.editPost(event.post, event.initialText);
+        await _postRepo.editPost(event.post, event.newText);
       } catch (e) {
         emit(PostError(error: e.toString()));
       }
@@ -38,6 +48,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(Loading());
       try {
         await _postRepo.deletePost(event.post);
+        Stream data = _postRepo.getFeed();
+        emit(GetPostLoaded(allpost: data));
       } catch (e) {
         emit(PostError(error: e.toString()));
       }

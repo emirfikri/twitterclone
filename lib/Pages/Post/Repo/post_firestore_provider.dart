@@ -7,10 +7,14 @@ import '../../../Models/postModel.dart';
 
 class PostFirestoreProvider {
   Future savePost(text) async {
+    DateTime currentPhoneDate = DateTime.now();
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+
     var doc = await FirebaseFirestore.instance.collection("posts").add({
       'text': text,
       'creator': FirebaseAuth.instance.currentUser!.uid,
-      'timestamp': FieldValue.serverTimestamp(),
+      // 'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': myTimeStamp,
       'retweet': false,
       'likesCount': 0,
       'retweetsCount': 0,
@@ -20,6 +24,7 @@ class PostFirestoreProvider {
     await FirebaseFirestore.instance.collection("posts").doc(doc.id).update({
       'originalId': doc.id,
       'ref': doc.id,
+      'id': doc.id,
     });
   }
 
@@ -27,15 +32,6 @@ class PostFirestoreProvider {
     await FirebaseFirestore.instance.collection("posts").doc(post.id).update({
       'text': text,
       'updateAt': FieldValue.serverTimestamp(),
-    });
-  }
-
-  Future reply(PostModel post, String text) async {
-    await post.ref.collection("replies").add({
-      'text': text,
-      'creator': FirebaseAuth.instance.currentUser!.uid,
-      'timestamp': FieldValue.serverTimestamp(),
-      'retweet': false
     });
   }
 

@@ -15,12 +15,14 @@ class AddPost extends PostEvent {
   );
 }
 
+class GetAllPost extends PostEvent {}
+
 class EditPost extends PostEvent {
   final PostModel post;
-  final String initialText;
+  final String newText;
   const EditPost(
     this.post,
-    this.initialText,
+    this.newText,
   );
 }
 
